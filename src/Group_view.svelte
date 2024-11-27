@@ -1,15 +1,29 @@
 <script>
     import { supabase } from './supabaseClient';
+    import { onMount } from 'svelte';
+    import { getContext } from 'svelte';
+
     let products = [];
+    let process_id;
+
+    // Retrieve process_id from URL parameters
+    const params = getContext('params');
+    process_id = params.process_id;
 
     async function fetchProducts() {
-        const { data, error } = await supabase.from('wordpress_woo_category').select('*');
+        const { data, error } = await supabase
+            .from('wordpress_woo_product')
+            .select('*')
+            .eq('process_id', process_id); // Filter by process_id
+
         if (error) console.error(error);
         else products = data;
     }
 
     // Fetch products when component mounts
-    fetchProducts();
+    onMount(() => {
+        fetchProducts();
+    });
 </script>
 
 <style>
@@ -47,7 +61,7 @@
         color: #666; /* Lighter text color for product prices */
     }
 
-    .group-button {
+    .download-button {
         background-color: #ff194f; /* Action button color */
         color: white; /* Text color for the button */
         border: none;
@@ -58,7 +72,7 @@
         margin-top: auto; /* Push button to the bottom of the product frame */
     }
 
-    .group-button:hover {
+    .download-button:hover {
         opacity: 0.8; /* Slightly darker on hover */
     }
 </style>
@@ -69,8 +83,7 @@
             <img src={product.thumbnail} alt={product.name} />
             <h5>{product.name}</h5>
             <p>{product.short_description}</p>
-            <a href={`/group_view?process_id=${product.process_id}`} class="group-button">Show more</a>
-            <!-- Assuming 'process_id' is a field in your product object -->
+            <a href={product.downloadable_url} class="download-button" download>Download now</a>
         </div>
     {/each}
 </div>
