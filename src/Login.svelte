@@ -99,6 +99,6 @@
             <p class="error-message">{error}</p>
         {/if}
         
-        <p>Forgot your password? <a href="#" style="color: #ff194f;">Reset it</a></p>
+        <!-- <p>Forgot your password? <a href="#" on:click={showResetPassword} style="color: #ff194f;">Reset it</a></p> -->
     </form>
 </div>

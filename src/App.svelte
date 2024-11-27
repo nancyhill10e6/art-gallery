@@ -94,14 +94,14 @@
 </div>
 
 <div class="container">
-    <img src="https://nancyhill.art/wp-content/uploads/2024/10/cropped-nancy_hill_art-1.png" alt="Logo" class="logo" />
+    <img src="https://my.nancyhill.art/public/logo.png" alt="Logo" class="logo" />
     
     {#if currentView === 'login'}
         <Login />
-        <p>Forgot your password? <a href="#" on:click={showResetPassword} style="color: #ff194f;">Reset it</a></p>
+        <p style="color: #ccc;">Forgot your password? <a href="#" on:click={showResetPassword} style="color: #ff194f;">Reset it</a></p>
     {:else if currentView === 'resetPassword'}
         <ResetPassword />
-        <p>Remembered your password? <a href="#" on:click={showLogin} style="color: #ff194f;">Log in</a></p>
+        <p style="color: #ccc;">Remembered your password? <a href="#" on:click={showLogin} style="color: #ff194f;">Log in</a></p>
     {:else if currentView === 'gallery'}
         <Gallery />
     {:else if currentView === 'mysubscription'}
