@@ -1,5 +1,6 @@
 <script>
     import { supabase } from './supabaseClient';
+    import { goto } from '$app/navigation'; // Import goto for navigation
     let products = [];
 
     async function fetchProducts() {
@@ -10,6 +11,11 @@
 
     // Fetch products when component mounts
     fetchProducts();
+
+    function handleShowMore(product) {
+        // Navigate to Group_view.svelte with process_id in the URL
+        goto(`/gropus?process_id=${product.process_id}`);
+    }
 </script>
 
 <style>
@@ -69,8 +75,7 @@
             <img src={product.thumbnail} alt={product.name} />
             <h5>{product.name}</h5>
             <p>{product.short_description}</p>
-            <a href={`/group_view?process_id=${product.process_id}`} class="group-button">Show more</a>
-            <!-- Assuming 'process_id' is a field in your product object -->
+            <button class="group-button" on:click={() => handleShowMore(product)}>Show more</button>
         </div>
     {/each}
 </div>
