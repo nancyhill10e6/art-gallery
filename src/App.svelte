@@ -94,7 +94,7 @@
 </div>
 
 <div class="container">
-    <img src="https://my.nancyhill.art/public/logo.png" alt="Logo" class="logo" />
+    <img src="/logo.png" alt="Logo" class="logo" />
     
     {#if currentView === 'login'}
         <Login />
