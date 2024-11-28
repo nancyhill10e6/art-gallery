@@ -1,5 +1,7 @@
 <script>
     import { supabase } from './supabaseClient';
+    import { goto } from 'svelte-spa-router';
+
     let products = [];
 
     async function fetchProducts() {
@@ -10,6 +12,10 @@
 
     // Fetch products when component mounts
     fetchProducts();
+
+    function navigateToGroup(process_id) {
+        goto(`/groups/${process_id}`);
+    }
 </script>
 
 <style>
@@ -69,7 +75,7 @@
             <img src={product.thumbnail} alt={product.name} />
             <h5>{product.name}</h5>
             <p>{product.short_description}</p>
-            <a href={`/groups?process_id=${product.process_id}`} class="group-button">Show more</a>
+            <button class="group-button" on:click={() => navigateToGroup(product.process_id)}>Show more</button>
         </div>
     {/each}
 </div>

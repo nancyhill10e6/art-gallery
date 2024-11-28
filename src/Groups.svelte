@@ -1,29 +1,37 @@
 <script>
     import { supabase } from './supabaseClient';
     import { onMount } from 'svelte';
-    import { getContext } from 'svelte';
 
+    export let params; // Passed by svelte-spa-router
     let products = [];
     let process_id;
 
     // Retrieve process_id from URL parameters
-    const params = getContext('params');
-    process_id = params.process_id;
+    $: process_id = params.process_id;
 
     async function fetchProducts() {
+        if (!process_id) return;
+
         const { data, error } = await supabase
             .from('wordpress_woo_product')
             .select('*')
             .eq('process_id', process_id); // Filter by process_id
 
-        if (error) console.error(error);
-        else products = data;
+        if (error) {
+            console.error(error);
+        } else {
+            products = data;
+        }
     }
 
-    // Fetch products when component mounts
+    // Fetch products when component mounts or when process_id changes
     onMount(() => {
         fetchProducts();
     });
+
+    $: if (process_id) {
+        fetchProducts();
+    }
 </script>
 
 <style>
@@ -78,12 +86,16 @@
 </style>
 
 <div class="groups">
-    {#each products as product}
-        <div class="product">
-            <img src={product.thumbnail} alt={product.name} />
-            <h5>{product.name}</h5>
-            <p>{product.short_description}</p>
-            <a href={product.downloadable_url} class="download-button" download>Download now</a>
-        </div>
-    {/each}
+    {#if products.length > 0}
+        {#each products as product}
+            <div class="product">
+                <img src={product.thumbnail} alt={product.name} />
+                <h5>{product.name}</h5>
+                <p>{product.short_description}</p>
+                <a href={product.downloadable_url} class="download-button" download>Download now</a>
+            </div>
+        {/each}
+    {:else}
+        <p>Loading products...</p>
+    {/if}
 </div>

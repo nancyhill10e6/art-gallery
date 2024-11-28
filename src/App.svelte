@@ -1,5 +1,8 @@
 <script>
+    import { Router } from 'svelte-spa-router';
     import { supabase } from './supabaseClient';
+
+    // Views
     import Login from './Login.svelte';
     import ResetPassword from './ResetPassword.svelte';
     import Gallery from './Gallery.svelte';
@@ -7,84 +10,75 @@
     import MySubscriptions from './MySubscriptions.svelte';
 
     let user = null;
-    let currentView = 'login'; // Default view
 
     // Check user authentication status
     supabase.auth.onAuthStateChange((event, session) => {
         user = session?.user;
-        currentView = user ? 'gallery' : 'login'; // Switch to gallery if logged in
+        if (!user) {
+            // Redirect to login if not authenticated
+            window.location.hash = '#/';
+        }
     });
-
-    function showResetPassword() {
-        currentView = 'resetPassword';
-    }
-
-    function showLogin() {
-        currentView = 'login';
-    }
-
-    function showGallery() {
-        currentView = 'gallery';
-    }
-
-    function showGroups() {
-        currentView = 'groups';
-    }
-
-    function showMySubscriptions() {
-        currentView = 'mysubscription';
-    }
 
     async function logout() {
         await supabase.auth.signOut();
         user = null; // Reset user state
-        currentView = 'login'; // Redirect to login after logout
+        window.location.hash = '#/'; // Redirect to login after logout
     }
+
+    // Routes
+    const routes = {
+        '/': Login,
+        '/reset-password': ResetPassword,
+        '/gallery': Gallery,
+        '/groups/:process_id': Groups,
+        '/my-subscriptions': MySubscriptions,
+    };
 </script>
 
 <style>
     body {
-        background-color: #f6f6f6; /* Full screen background color */
+        background-color: #f6f6f6;
         margin: 0;
         font-family: Arial, sans-serif;
     }
 
     .navbar {
-        background-color: #ccc; /* Gray background for navbar */
-        padding: 10px 0; /* Padding for vertical spacing */
-        position: fixed; /* Fix position to the top */
-        top: 0; /* Align to the top */
-        left: 0; /* Align to the left */
-        right: 0; /* Align to the right */
-        width: 100%; /* Full width */
-        display: flex; /* Use flexbox for layout */
-        justify-content: center; /* Center menu items */
-        gap: 20px; /* Space between menu items */
-        z-index: 1000; /* Ensure navbar is above other content */
+        background-color: #ccc;
+        padding: 10px 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        z-index: 1000;
     }
 
     .navbar a {
-        color: #000; /* Text color for links */
-        text-decoration: none; /* Remove underline */
-        font-weight: bold; /* Make text bold */
+        color: #000;
+        text-decoration: none;
+        font-weight: bold;
     }
 
     .navbar a:hover {
-        color: #ff194f; /* Change color on hover */
+        color: #ff194f;
     }
 
     .logo {
         display: block;
         margin: 20px auto;
-        max-width: 200px; /* Adjust logo size */
+        max-width: 200px;
     }
 
     .container {
         max-width: 100%;
-        margin-top: 60px; /* Add margin to avoid overlap with navbar */
+        margin-top: 60px;
         padding: 20px;
         text-align: center;
-        background-color: white; /* Background for forms */
+        background-color: white;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
@@ -92,26 +86,13 @@
 
 <div class="navbar">
     {#if user}
-        <a href="#" on:click|preventDefault={showGallery}>Gallery</a>
-        <a href="#" on:click|preventDefault={showMySubscriptions}>My Subscriptions</a>
+        <a href="#/gallery">Gallery</a>
+        <a href="#/my-subscriptions">My Subscriptions</a>
         <a href="#" on:click|preventDefault={logout}>Logout</a>
     {/if}
 </div>
 
 <div class="container">
     <img src="/logo.png" alt="Logo" class="logo" />
-    
-    {#if currentView === 'login'}
-        <Login />
-        <p style="color: #ccc;">Forgot your password? <a href="#" on:click={showResetPassword} style="color: #ff194f;">Reset it</a></p>
-    {:else if currentView === 'resetPassword'}
-        <ResetPassword />
-        <p style="color: #ccc;">Remembered your password? <a href="#" on:click={showLogin} style="color: #ff194f;">Log in</a></p>
-    {:else if currentView === 'gallery'}
-        <Gallery />
-    {:else if currentView === 'groups'}
-        <Groups />
-    {:else if currentView === 'mysubscription'}
-        <MySubscriptions />
-    {/if}
+    <Router {routes} />
 </div>
