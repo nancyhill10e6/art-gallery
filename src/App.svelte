@@ -43,12 +43,6 @@
 </script>
 
 <style>
-    body {
-        background-color: #f6f6f6;
-        margin: 0;
-        font-family: Arial, sans-serif;
-    }
-
     .navbar {
         background-color: #ccc;
         padding: 10px 0;
