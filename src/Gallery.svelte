@@ -1,6 +1,5 @@
 <script>
     import { supabase } from './supabaseClient';
-    import { goto } from 'svelte-spa-router';
 
     let products = [];
 
@@ -14,7 +13,7 @@
     fetchProducts();
 
     function navigateToGroup(process_id) {
-        goto(`/groups/${process_id}`);
+        window.location.href = `/groups/${process_id}`;
     }
 </script>
 
