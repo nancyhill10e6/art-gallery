@@ -1,8 +1,9 @@
-import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
+import { defineConfig } from 'vite';
+import svelte from '@sveltejs/vite-plugin-svelte';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [svelte()],
-  base: '/gallery', // Set base path for production
-})
+  build: {
+    outDir: 'dist',  // Output directory for production build
+  },
+});

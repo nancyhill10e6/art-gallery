@@ -38,7 +38,7 @@
 </script>
 
 <style>
-    body {
+    /* body {
         background-color: #f6f6f6;
         margin: 0;
         font-family: Arial, sans-serif;
@@ -95,18 +95,19 @@
 
     .logout-button:hover {
         opacity: 0.8;
-    }
+    } */
 </style>
 
 <div class="navbar">
     {#if user}
         <a href="/gallery">Gallery</a>
         <a href="/my-subscriptions">My Subscriptions</a>
-        <a href="#" on:click|preventDefault={logout}>Logout</a>
+        <a href="/" on:click|preventDefault={logout}>Logout</a>
     {/if}
 </div>
 
-<div class="container">
+<Router {routes} />
+<!-- <div class="container">
     <img src="/logo.png" alt="Logo" class="logo" />
     <Router {routes} />
-</div>
+</div> -->
