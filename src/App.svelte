@@ -94,7 +94,7 @@
     {#if $user}  <!-- Use reactive store to check user state -->
         <a href="/gallery">Gallery</a>
         <a href="/my-subscriptions">My Subscriptions</a>
-        <a href="#" on:click|preventDefault={logout}>Logout</a>
+        <a href="/" on:click|preventDefault={logout}>Logout</a>
     {/if}
 </div>
 
