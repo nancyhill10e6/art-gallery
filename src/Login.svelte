@@ -1,18 +1,17 @@
 <script>
     import { supabase } from './supabaseClient';
-    import { goto } from 'svelte-spa-router'; // Use router's goto for redirection
+
     let email = '';
     let password = '';
     let error = '';
 
     async function handleLogin() {
-        const { data: user, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
-
+        const { data, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
         if (loginError) {
-            error = loginError.message; // Display the error message
+            error = loginError.message;
         } else {
-            error = ''; // Clear error if login is successful
-            goto('/gallery'); // Redirect to the gallery view
+            // Navigate to the desired route after successful login
+            window.location.href = '/gallery'; // Replace '/dashboard' with your desired route
         }
     }
 </script>
@@ -89,14 +88,14 @@
             <input type="email" id="email" bind:value={email} required placeholder=" " />
             <label for="email">Email</label>
         </div>
-        
+
         <div class="input-field">
             <input type="password" id="password" bind:value={password} required placeholder=" " />
             <label for="password">Password</label>
         </div>
-        
+
         <button class="login-button" type="submit">Login</button>
-        
+
         {#if error}
             <p class="error-message">{error}</p>
         {/if}
