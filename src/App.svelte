@@ -16,14 +16,14 @@
         user = session?.user;
         if (!user) {
             // Redirect to login if not authenticated
-            window.location.hash = '#/';
+            window.location.hash = '/';
         }
     });
 
     async function logout() {
         await supabase.auth.signOut();
         user = null; // Reset user state
-        window.location.hash = '#/'; // Redirect to login after logout
+        window.location.hash = '/'; // Redirect to login after logout
     }
 
     // Routes
@@ -86,8 +86,8 @@
 
 <div class="navbar">
     {#if user}
-        <a href="#/gallery">Gallery</a>
-        <a href="#/my-subscriptions">My Subscriptions</a>
+        <a href="/gallery">Gallery</a>
+        <a href="/my-subscriptions">My Subscriptions</a>
         <a href="#" on:click|preventDefault={logout}>Logout</a>
     {/if}
 </div>
