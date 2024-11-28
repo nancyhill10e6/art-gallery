@@ -1,5 +1,5 @@
 <script>
-    import Router from 'svelte-spa-router';
+    import Router from 'svelte-spa-router';  // Correct default import
     import { supabase } from './supabaseClient';
 
     // Views
@@ -18,8 +18,6 @@
     // Fetch the session on component mount
     onMount(async () => {
         const { data: { session } } = await supabase.auth.getSession();  // Use getSession() instead of session()
-        console.log("semi-data:")
-        console.log(session?.user)
         user.set(session?.user || null);  // Update the user state based on session
     });
 
@@ -96,7 +94,7 @@
     {#if $user}  <!-- Use reactive store to check user state -->
         <a href="/gallery">Gallery</a>
         <a href="/my-subscriptions">My Subscriptions</a>
-        <a href="/" on:click|preventDefault={logout}>Logout</a>
+        <a href="#" on:click|preventDefault={logout}>Logout</a>
     {/if}
 </div>
 
