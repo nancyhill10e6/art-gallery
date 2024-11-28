@@ -1,88 +1,90 @@
 <script>
     import { supabase } from './supabaseClient';
+    import { goto } from 'svelte-spa-router'; // Use router's goto for redirection
     let email = '';
     let password = '';
     let error = '';
 
     async function handleLogin() {
-        const { user, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+        const { data: user, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+
         if (loginError) {
-            error = loginError.message;
+            error = loginError.message; // Display the error message
         } else {
-            // Redirect or update UI after successful login
+            error = ''; // Clear error if login is successful
+            goto('/gallery'); // Redirect to the gallery view
         }
     }
 </script>
 
 <style>
     .container {
-        max-width: 600px; /* Increased width for a more spacious layout */
+        max-width: 600px;
         margin: auto;
-        padding: 40px; /* Added padding for better spacing */
-        background-color: white; /* Background color for form */
+        padding: 40px;
+        background-color: white;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .input-field {
         position: relative;
-        margin-bottom: 20px; /* Space between input fields */
+        margin-bottom: 20px;
     }
 
     .input-field input {
-        color: #000; /* Text color */
-        background-color: #fff; /* Background color */
-        border: 1px solid #ccc; /* Border color */
+        color: #000;
+        background-color: #fff;
+        border: 1px solid #ccc;
         border-radius: 4px;
-        padding: 12px 10px; /* Padding for input */
-        width: 100%; /* Full width */
+        padding: 12px 10px;
+        width: 100%;
     }
 
     .input-field label {
         position: absolute;
         top: 12px;
         left: 10px;
-        color: #666; /* Label color */
-        transition: all 0.2s ease; /* Smooth transition for label movement */
+        color: #666;
+        transition: all 0.2s ease;
     }
+
     h5 {
-        color: #333; /* Darker text color for product names */
+        color: #333;
         margin: 8px 0;
     }
 
-
     .input-field input:focus + label,
     .input-field input:not(:placeholder-shown) + label {
-        top: -8px; /* Move label above input when focused or filled */
+        top: -8px;
         left: 10px;
-        font-size: 12px; /* Smaller font size when floating */
-        color: #ff194f; /* Label color on focus */
+        font-size: 12px;
+        color: #ff194f;
     }
 
     .error-message {
-        color: red; /* Error message color */
+        color: red;
         margin-top: 10px;
     }
 
     .login-button {
-        background-color: #ff194f; /* Action button color */
-        color: white; /* Text color for the button */
+        background-color: #ff194f;
+        color: white;
         border-radius: 5px;
         padding: 12px 20px;
         border: none;
         cursor: pointer;
-        width: 100%; /* Full width button */
+        width: 100%;
     }
 
     .login-button:hover {
-        opacity: 0.8; /* Slightly darker on hover */
+        opacity: 0.8;
     }
 </style>
 
 <div class="container">
     <h5>Login</h5>
     <form on:submit|preventDefault={handleLogin}>
-        
         <div class="input-field">
             <input type="email" id="email" bind:value={email} required placeholder=" " />
             <label for="email">Email</label>
@@ -98,7 +100,5 @@
         {#if error}
             <p class="error-message">{error}</p>
         {/if}
-        
-        <!-- <p>Forgot your password? <a href="#" on:click={showResetPassword} style="color: #ff194f;">Reset it</a></p> -->
     </form>
 </div>
