@@ -1,48 +1,49 @@
 <script>
-    import Router from 'svelte-spa-router';  // Correct default import
-    import { supabase } from './supabaseClient';
+    import { supabase } from './supabaseClient';  // Import your Supabase client
+    import Router from 'svelte-spa-router';  // Correct import for Router
 
-    // Views
+    // Import Views (Pages)
     import Login from './Login.svelte';
     import ResetPassword from './ResetPassword.svelte';
     import Gallery from './Gallery.svelte';
     import Groups from './Groups.svelte';
     import MySubscriptions from './MySubscriptions.svelte';
 
-    import { onMount } from 'svelte';
-    import { writable } from 'svelte/store';
+    let user = null;
 
-    // Reactive store for user state
-    let user = writable(null); // Use a writable store to handle user state
-
-    // Fetch the session on component mount
-    onMount(async () => {
-        const { data: { session } } = await supabase.auth.getSession();  // Use getSession() instead of session()
-        user.set(session?.user || null);  // Update the user state based on session
-    });
-
-    // Listen for authentication state changes
+    // Check user authentication status and handle redirects
     supabase.auth.onAuthStateChange((event, session) => {
-        user.set(session?.user || null);  // Update the user state on auth state change
+        user = session?.user;
+        if (!user) {
+            // Redirect to login if user is not authenticated
+            window.location.hash = '/';
+        }
     });
 
+    // Define routes for the app
+    const routes = {
+        '/': Login,  // Login page
+        '/reset-password': ResetPassword,  // Reset password page
+        '/gallery': Gallery,  // Gallery page
+        '/groups/:process_id': Groups,  // Dynamic groups page with process_id
+        '/my-subscriptions': MySubscriptions,  // My subscriptions page
+    };
+
+    // Logout function to clear user session and redirect to login
     async function logout() {
         await supabase.auth.signOut();
-        user.set(null);  // Reset user state on logout
+        user = null; // Reset user state
         window.location.hash = '/'; // Redirect to login after logout
     }
-
-    // Routes
-    const routes = {
-        '/': Login,
-        '/reset-password': ResetPassword,
-        '/gallery': Gallery,
-        '/groups/:process_id': Groups,
-        '/my-subscriptions': MySubscriptions,
-    };
 </script>
 
 <style>
+    body {
+        background-color: #f6f6f6;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
     .navbar {
         background-color: #ccc;
         padding: 10px 0;
@@ -82,13 +83,26 @@
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
+
+    .logout-button {
+        background-color: #ff194f;
+        color: white;
+        border-radius: 5px;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+    }
+
+    .logout-button:hover {
+        opacity: 0.8;
+    }
 </style>
 
 <div class="navbar">
-    {#if $user}  <!-- Use reactive store to check user state -->
+    {#if user}
         <a href="/gallery">Gallery</a>
         <a href="/my-subscriptions">My Subscriptions</a>
-        <a href="/" on:click|preventDefault={logout}>Logout</a>
+        <a href="#" on:click|preventDefault={logout}>Logout</a>
     {/if}
 </div>
 
