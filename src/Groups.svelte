@@ -27,7 +27,7 @@
 </script>
 
 <style>
-    .gallery {
+    .groups {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Responsive columns */
         gap: 16px;
@@ -77,7 +77,7 @@
     }
 </style>
 
-<div class="gallery">
+<div class="groups">
     {#each products as product}
         <div class="product">
             <img src={product.thumbnail} alt={product.name} />
