@@ -3,6 +3,7 @@
     import Login from './Login.svelte';
     import ResetPassword from './ResetPassword.svelte';
     import Gallery from './Gallery.svelte';
+    import Groups from './Groups.svelte';
     import MySubscriptions from './MySubscriptions.svelte';
 
     let user = null;
@@ -24,6 +25,10 @@
 
     function showGallery() {
         currentView = 'gallery';
+    }
+
+    function showGroups() {
+        currentView = 'groups';
     }
 
     function showMySubscriptions() {
@@ -104,6 +109,8 @@
         <p style="color: #ccc;">Remembered your password? <a href="#" on:click={showLogin} style="color: #ff194f;">Log in</a></p>
     {:else if currentView === 'gallery'}
         <Gallery />
+    {:else if currentView === 'groups'}
+        <Groups />
     {:else if currentView === 'mysubscription'}
         <MySubscriptions />
     {/if}
