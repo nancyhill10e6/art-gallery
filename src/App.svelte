@@ -11,12 +11,21 @@
 
     let user = null;
 
-    // Check user authentication status
+    // Check user authentication status on load
     supabase.auth.onAuthStateChange((event, session) => {
         user = session?.user;
         if (!user) {
             // Redirect to login if not authenticated
             window.location.hash = '/';
+        }
+    });
+
+    // Fetch initial session on component mount to handle page reload
+    import { onMount } from 'svelte';
+    onMount(async () => {
+        const { data: { session } } = await supabase.auth.getSession();  // Use getSession() instead of session()
+        if (session) {
+            user = session.user;
         }
     });
 
