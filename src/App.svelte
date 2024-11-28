@@ -1,5 +1,5 @@
 <script>
-    import { Router } from 'svelte-spa-router';
+    import Router from 'svelte-spa-router';
     import { supabase } from './supabaseClient';
 
     // Views
