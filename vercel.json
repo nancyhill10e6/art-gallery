@@ -4,16 +4,12 @@
       {
         "src": "index.html",
         "use": "@vercel/static"
-      },
-      {
-        "src": "vite.config.js",
-        "use": "@vercel/node"
       }
     ],
     "routes": [
       {
-        "src": "/(.*)",
+        "src": "/.*",
         "dest": "/index.html"
       }
     ]
-}
+  }
