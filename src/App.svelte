@@ -9,29 +9,28 @@
     import Groups from './Groups.svelte';
     import MySubscriptions from './MySubscriptions.svelte';
 
-    let user = null;
-
-    // Check user authentication status on load
-    supabase.auth.onAuthStateChange((event, session) => {
-        user = session?.user;
-        if (!user) {
-            // Redirect to login if not authenticated
-            window.location.hash = '/';
-        }
-    });
-
-    // Fetch initial session on component mount to handle page reload
     import { onMount } from 'svelte';
+    import { writable } from 'svelte/store';
+
+    // Reactive store for user state
+    let user = writable(null); // Use a writable store to handle user state
+
+    // Fetch the session on component mount
     onMount(async () => {
         const { data: { session } } = await supabase.auth.getSession();  // Use getSession() instead of session()
-        if (session) {
-            user = session.user;
-        }
+        console.log("semi-data:")
+        console.log(session?.user)
+        user.set(session?.user || null);  // Update the user state based on session
+    });
+
+    // Listen for authentication state changes
+    supabase.auth.onAuthStateChange((event, session) => {
+        user.set(session?.user || null);  // Update the user state on auth state change
     });
 
     async function logout() {
         await supabase.auth.signOut();
-        user = null; // Reset user state
+        user.set(null);  // Reset user state on logout
         window.location.hash = '/'; // Redirect to login after logout
     }
 
@@ -94,10 +93,10 @@
 </style>
 
 <div class="navbar">
-    {#if user}
+    {#if $user}  <!-- Use reactive store to check user state -->
         <a href="/gallery">Gallery</a>
         <a href="/my-subscriptions">My Subscriptions</a>
-        <a href="#" on:click|preventDefault={logout}>Logout</a>
+        <a href="/" on:click|preventDefault={logout}>Logout</a>
     {/if}
 </div>
 
